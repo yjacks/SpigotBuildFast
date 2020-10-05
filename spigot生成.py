@@ -49,7 +49,10 @@ def setBuild():  # 生成文件
     if ver == '':
         showwarning("警告", "将会生成最新版本")
     # 生成bat,次选方案,因为os.popen和os.system都不支持cd
-    Command_file = open('test.bat', 'w')
+    if sys.platfrom == 'nt':
+        Command_file = open('test.bat', 'w')
+    else:
+        Command_file = open('test.sh', 'w')
     Command_file.write(r"@echo off"+"\n")
     if not dir == '':
         Command_file.write('cd /d ' + dir+"\n")  # 如果dir不是默认,就在当前目录生成
@@ -57,9 +60,9 @@ def setBuild():  # 生成文件
         Command_file.write('java -jar '+str(BuildJar)+ ' --rev ' + ver)
     else:
         Command_file.write('java -jar ' + str(BuildJar))
-    Command_file.write('\nexit')
+    Command_file.write('exit')
     Command_file.close()
-    os.popen('start test.bat')
+    os.popen('start test.bat' if os.name == 'nt' else 'sh test.bat')
     return [True, dir]
 
 
